@@ -32,6 +32,8 @@ human-readable data formats (Markdown and JSON). You can export
 - Procedures
 - Risk Register
 - Vendor Register (including document downloads, quick assessments, risks & action items)
+- Asset inventory
+- Asset Types
 
 ## Usage
 
@@ -54,7 +56,9 @@ human-readable data formats (Markdown and JSON). You can export
   ├── pols/
   ├── pros/
   ├── risks/
-  └── vendors/
+  ├── vendors/
+  ├── assets/
+  └── asset-types/
   ```
 - Now you can export all data or individual categories:
   - `ctrlmap-cli --copy-all` — export everything
@@ -63,6 +67,8 @@ human-readable data formats (Markdown and JSON). You can export
   - `ctrlmap-cli --copy-pros` — all procedures
   - `ctrlmap-cli --copy-risks` — all risks
   - `ctrlmap-cli --copy-vendors` — all vendors
+  - `ctrlmap-cli --copy-assets` — all assets
+  - `ctrlmap-cli --copy-asset-types` — all asset types
 - Or export a single item by its code:
   - `ctrlmap-cli --copy-gov GOV-1` — one governance document
   - `ctrlmap-cli --copy-pol POL-5` — one policy

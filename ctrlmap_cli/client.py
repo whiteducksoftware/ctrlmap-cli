@@ -109,6 +109,18 @@ class CtrlMapClient:
             },
         )
 
+    _ASSETS_LIST_BODY: Dict[str, Any] = {
+        "startpos": 0,
+        "pagesize": 40,
+        "rules": [],
+    }
+
+    def list_assets(self) -> Any:
+        return self.post("/assets", json=self._ASSETS_LIST_BODY)
+
+    def list_asset_types(self) -> Any:
+        return self.get("/assettypes")
+
     def download_file(self, url: str) -> bytes:
         """Download a file from a URL (e.g. pre-signed S3 URL).
 
