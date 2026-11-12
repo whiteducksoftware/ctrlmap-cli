@@ -369,6 +369,36 @@ class TestVendorHelpers:
         assert result == {"totalQuestions": 10}
 
 
+class TestAssetHelpers:
+    def test_list_assets_endpoint(self) -> None:
+        client = _make_client()
+        mock_resp = _mock_response(200, [{"id": 10}])
+
+        with patch.object(client._session, "request", return_value=mock_resp) as mock_req:
+            result = client.list_assets()
+
+        mock_req.assert_called_once_with(
+            "POST",
+            "https://api.eu.ctrlmap.com/assets",
+            json={"startpos": 0, "pagesize": 40, "rules": []},
+        )
+        assert result == [{"id": 10}]
+
+    def test_list_asset_types_endpoint(self) -> None:
+        client = _make_client()
+        mock_resp = _mock_response(200, [{"id": 2, "name": "Server"}])
+
+        with patch.object(client._session, "request", return_value=mock_resp) as mock_req:
+            result = client.list_asset_types()
+
+        mock_req.assert_called_once_with(
+            "GET",
+            "https://api.eu.ctrlmap.com/assettypes",
+            params=None,
+        )
+        assert result == [{"id": 2, "name": "Server"}]
+
+
 class TestDownloadFile:
     def test_download_success(self) -> None:
         client = _make_client()

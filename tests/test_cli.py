@@ -106,6 +106,7 @@ class TestCopyFlagsRequireConfig:
     @pytest.mark.parametrize("flag", [
         "--copy-all", "--copy-govs", "--copy-pols",
         "--copy-pros", "--copy-risks", "--copy-vendors",
+        "--copy-assets", "--copy-asset-types",
     ])
     def test_plural_flags_fail_without_config(
         self, flag: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
@@ -136,7 +137,11 @@ class TestParserArgStructure:
 
     def test_plural_flags_are_store_true(self) -> None:
         parser = _build_parser()
-        for flag in ("--copy-govs", "--copy-pols", "--copy-pros", "--copy-risks", "--copy-vendors"):
+        for flag in (
+            "--copy-govs", "--copy-pols", "--copy-pros",
+            "--copy-risks", "--copy-vendors", "--copy-assets",
+            "--copy-asset-types",
+        ):
             args = parser.parse_args([flag])
             attr = flag.lstrip("-").replace("-", "_")
             assert getattr(args, attr) is True

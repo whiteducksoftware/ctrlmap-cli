@@ -9,6 +9,8 @@ from ctrlmap_cli import __version__
 from ctrlmap_cli.client import CtrlMapClient
 from ctrlmap_cli.config import read_config, write_config
 from ctrlmap_cli.exceptions import ConfigError
+from ctrlmap_cli.exporters.asset_types import AssetTypesExporter
+from ctrlmap_cli.exporters.assets import AssetsExporter
 from ctrlmap_cli.exporters.base import BaseExporter
 from ctrlmap_cli.exporters.governance import GovernanceExporter
 from ctrlmap_cli.exporters.policies import PoliciesExporter
@@ -17,7 +19,7 @@ from ctrlmap_cli.exporters.risks import RisksExporter
 from ctrlmap_cli.exporters.vendors import VendorsExporter
 from ctrlmap_cli.models.config import AppConfig
 
-_SUBDIRS = ("govs", "pols", "pros", "risks", "vendors")
+_SUBDIRS = ("govs", "pols", "pros", "risks", "vendors", "assets", "asset-types")
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -46,6 +48,8 @@ def _build_parser() -> argparse.ArgumentParser:
     group.add_argument("--copy-risk", metavar="CODE", help="Export a single risk by code.")
     group.add_argument("--copy-vendors", action="store_true", help="Export all vendors.")
     group.add_argument("--copy-vendor", metavar="CODE", help="Export a single vendor by code.")
+    group.add_argument("--copy-assets", action="store_true", help="Export all assets.")
+    group.add_argument("--copy-asset-types", action="store_true", help="Export all asset types.")
     parser.add_argument(
         "--force", action="store_true",
         help="Overwrite existing files without confirmation.",
@@ -125,6 +129,10 @@ def _run_export(args: argparse.Namespace) -> None:
         exporters.append(RisksExporter(client, cwd / "risks", **export_kwargs))
     if args.copy_all or args.copy_vendors:
         exporters.append(VendorsExporter(client, cwd / "vendors", **export_kwargs))
+    if args.copy_all or args.copy_assets:
+        exporters.append(AssetsExporter(client, cwd / "assets", **export_kwargs))
+    if args.copy_all or args.copy_asset_types:
+        exporters.append(AssetTypesExporter(client, cwd / "asset-types", **export_kwargs))
 
     for exporter in exporters:
         exporter.export()
@@ -138,6 +146,7 @@ def _has_export_flag(args: argparse.Namespace) -> bool:
         or args.copy_pros or args.copy_pro
         or args.copy_risks or args.copy_risk
         or args.copy_vendors or args.copy_vendor
+        or args.copy_assets or args.copy_asset_types
     )
 
 

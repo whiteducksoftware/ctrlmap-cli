@@ -397,18 +397,24 @@ class TestCliExportWiring:
         pro_instance = MagicMock()
         risk_instance = MagicMock()
         vendor_instance = MagicMock()
+        assets_instance = MagicMock()
+        asset_types_instance = MagicMock()
 
         gov_cls = MagicMock(return_value=gov_instance)
         pol_cls = MagicMock(return_value=pol_instance)
         pro_cls = MagicMock(return_value=pro_instance)
         risk_cls = MagicMock(return_value=risk_instance)
         vendor_cls = MagicMock(return_value=vendor_instance)
+        assets_cls = MagicMock(return_value=assets_instance)
+        asset_types_cls = MagicMock(return_value=asset_types_instance)
 
         monkeypatch.setattr("ctrlmap_cli.cli.GovernanceExporter", gov_cls)
         monkeypatch.setattr("ctrlmap_cli.cli.PoliciesExporter", pol_cls)
         monkeypatch.setattr("ctrlmap_cli.cli.ProceduresExporter", pro_cls)
         monkeypatch.setattr("ctrlmap_cli.cli.RisksExporter", risk_cls)
         monkeypatch.setattr("ctrlmap_cli.cli.VendorsExporter", vendor_cls)
+        monkeypatch.setattr("ctrlmap_cli.cli.AssetsExporter", assets_cls)
+        monkeypatch.setattr("ctrlmap_cli.cli.AssetTypesExporter", asset_types_cls)
 
         with patch("sys.argv", ["ctrlmap-cli", "--copy-all"]):
             from ctrlmap_cli.cli import main
@@ -420,12 +426,16 @@ class TestCliExportWiring:
         pro_cls.assert_called_once_with(client, tmp_path / "pros", **kwargs)
         risk_cls.assert_called_once_with(client, tmp_path / "risks", **kwargs)
         vendor_cls.assert_called_once_with(client, tmp_path / "vendors", **kwargs)
+        assets_cls.assert_called_once_with(client, tmp_path / "assets", **kwargs)
+        asset_types_cls.assert_called_once_with(client, tmp_path / "asset-types", **kwargs)
 
         gov_instance.export.assert_called_once()
         pol_instance.export.assert_called_once()
         pro_instance.export.assert_called_once()
         risk_instance.export.assert_called_once()
         vendor_instance.export.assert_called_once()
+        assets_instance.export.assert_called_once()
+        asset_types_instance.export.assert_called_once()
 
     def test_force_and_keep_raw_json_passed_to_exporters(
         self,
